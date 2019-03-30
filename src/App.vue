@@ -10,15 +10,27 @@
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 
+delete L.Icon.Default.prototype._getIconUrl;
+
+L.Icon.Default.mergeOptions(
+  { iconUrl       : require('leaflet/dist/images/marker-icon.png'),
+    iconRetinaUrl : require('leaflet/dist/images/marker-icon-2x.png'),
+    shadowUrl     : require('leaflet/dist/images/marker-shadow.png')
+  }
+)
+
 export default {
   // name: 'app',
   // components: {
   //   HelloWorld
   // }
   mounted() {
-    L.map('app', { center:L.latLng( 35.6825, 139.752778 ), zoom:16 }).addLayer(
+    const map = L.map('app', { center:L.latLng( 35.6825, 139.752778 ), zoom:16 }).addLayer(
       L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png')
-    )
+    ).on(
+      'click',
+      p => map.addLayer(L.marker(p.latlng))
+      )
   }
 }
 </script>
